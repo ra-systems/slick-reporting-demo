@@ -24,7 +24,7 @@ SECRET_KEY = '$y6(((t+0t*o9(ps9-7mvu=v%zt15u^5l_qrjq$_b2fz_&hfrj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-slick-reporting.com']
 
 # Application definition
 
