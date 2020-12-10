@@ -69,7 +69,8 @@ class SlickReportView(SlickReportViewBase):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # context['code'] = inspect.getsource(self.__class__)
-        context['code'] = highlight(inspect.getsource(self.__class__), PythonLexer(), HtmlFormatter(style='colorful'))
+        # context['code'] = highlight(inspect.getsource(self.__class__), PythonLexer(), HtmlFormatter(style='colorful'))
+        context['code'] = inspect.getsource(self.__class__)
         context['comment'] = publish_parts(self.comment, writer_name='html')['html_body']
         context['comment'] = publish_parts(self.__class__.__doc__ or '', writer_name='html')['html_body']
 

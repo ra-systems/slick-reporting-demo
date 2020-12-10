@@ -43,7 +43,7 @@
         <div class="list-group list-group-flush">
             {% for menu_item in MENU %}
                 <a href="/{{ menu_item.0 }}"
-                   class="list-group-item list-group-item-action bg-light">{{ menu_item.1 }}</a>
+                   class="list-group-item list-group-item-action {% if menu_item.0 == menu.current.0 %} active {% else %} bg-light {% endif %}">{{ menu_item.1 }}</a>
             {% endfor %}
 
         </div>
@@ -90,11 +90,11 @@
                 <h4>{{ menu.current.1 }}</h4>
             {% endblock %}
             {% block code %}
-                <pre><code class="python">
-
-            {{ code|safe }}
-        </code></pre>
+                <pre><code class="python">{{ code|safe }}
+                </code></pre>
             {% endblock %}
+
+
 
             <nav class="blog-pagination">
                 {% if menu.previous %}
@@ -102,14 +102,15 @@
                         Previous: {{ menu.previous.1 }} </a>
                 {% endif %}
                 {% if menu.next %}
-                    <a class="next btn btn-outline-primary" href="/{{ menu.next.0 }}" style="float: right"> Next:{{ menu.next.1 }} > </a>
+                    <a class="next btn btn-outline-primary" href="/{{ menu.next.0 }}" style="float: right">
+                        Next:{{ menu.next.1 }} > </a>
                 {% endif %}
 
             </nav>
             <hr>
-        {% if form %}
-            <h2 class="mt-4 mb-4 text-center">Live Example</h2>
-        {% endif %}
+            {% if form %}
+                <h2 class="mt-4 mb-4 text-center">Live Example</h2>
+            {% endif %}
             {% block content %}
             {% endblock %}
 
@@ -143,11 +144,17 @@
 
 <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
+
+
+<link rel="stylesheet" type="text/css"
+      href="https://highlightjs.org/static/demo/styles/a11y-dark.css"/>
+
+
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
 
 <script>hljs.initHighlightingOnLoad();</script>
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"
         integrity="JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk"
         crossorigin="anonymous"></script>

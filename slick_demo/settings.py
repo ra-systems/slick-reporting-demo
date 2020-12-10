@@ -138,14 +138,11 @@ MENU = (
     ('crosstab', _('Crosstab')),
     ('crosstab-charts', _('Crosstab Customization')),
 
-    ('crosstab-charts', _('Change Charts Engine')),
-    ('crosstab-charts', _('Integration in your own views')),
-    ('crosstab-charts', _('Writing your own chart')),
+    # ('crosstab-charts', _('Integration in your own views')),
+    # ('crosstab-charts', _('Writing your own chart')),
 
-    # ('crosstab-charts', _('Exploring View Response')),
-
-    ('crosstab-charts', _('Form Customization')),
-    ('crosstab-charts', _('ReportFields')),
-    ('crosstab-charts', _('Debit and Credit calculation')),
+    # ('crosstab-charts', _('Form Customization')),
+    # ('crosstab-charts', _('ReportFields')),
+    ('wip', _('Debit and Credit calculation')),
 
 )
