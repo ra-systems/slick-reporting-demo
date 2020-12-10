@@ -2,16 +2,11 @@ from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.template.defaultfilters import date
 from django.views.generic import TemplateView
-from docutils.core import publish_parts
 from slick_reporting.views import SlickReportViewBase, SlickReportView as OriginalReportView
 from slick_reporting.fields import SlickReportField
 from .models import SalesLineTransaction
 from django.utils.translation import ugettext_lazy as _
 import inspect
-
-from pygments import highlight
-from pygments.lexers import PythonLexer
-from pygments.formatters import HtmlFormatter
 
 User = get_user_model()
 
@@ -71,8 +66,8 @@ class SlickReportView(SlickReportViewBase):
         # context['code'] = inspect.getsource(self.__class__)
         # context['code'] = highlight(inspect.getsource(self.__class__), PythonLexer(), HtmlFormatter(style='colorful'))
         context['code'] = inspect.getsource(self.__class__)
-        context['comment'] = publish_parts(self.comment, writer_name='html')['html_body']
-        context['comment'] = publish_parts(self.__class__.__doc__ or '', writer_name='html')['html_body']
+        # context['comment'] = publish_parts(self.comment, writer_name='html')['html_body']
+        # context['comment'] = publish_parts(self.__class__.__doc__ or '', writer_name='html')['html_body']
 
         code = 'print "Hello World"'
         # print()
