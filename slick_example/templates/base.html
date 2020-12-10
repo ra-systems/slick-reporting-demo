@@ -1,0 +1,169 @@
+{% load static slick_example_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Django Slick Reporting</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+
+
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+
+    <style>
+        pre code {
+            font-size: 1.3em;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+<div class="d-flex" id="wrapper">
+
+    {% get_current_menu as menu %}
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">Django Slick Reporting</div>
+        <div class="list-group list-group-flush">
+            {% for menu_item in MENU %}
+                <a href="/{{ menu_item.0 }}"
+                   class="list-group-item list-group-item-action bg-light">{{ menu_item.1 }}</a>
+            {% endfor %}
+
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            {#            <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>#}
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/ra-systems/django-slick-reporting">Github</a>
+                    </li>
+                    {#                    <li class="nav-item dropdown">#}
+                    {#                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"#}
+                    {#                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+                    {#                            Dropdown#}
+                    {#                        </a>#}
+                    {#                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">#}
+                    {#                            <a class="dropdown-item" href="#">Action</a>#}
+                    {#                            <a class="dropdown-item" href="#">Another action</a>#}
+                    {#                            <div class="dropdown-divider"></div>#}
+                    {#                            <a class="dropdown-item" href="#">Something else here</a>#}
+                    {#                        </div>#}
+                    {#                    </li>#}
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            {% block page_title %}
+                <h4>{{ menu.current.1 }}</h4>
+            {% endblock %}
+            {% block code %}
+                <pre><code class="python">
+
+            {{ code|safe }}
+        </code></pre>
+            {% endblock %}
+
+            <nav class="blog-pagination">
+                {% if menu.previous %}
+                    <a class="previous btn btn-outline-primary" href="/{{ menu.previous.0 }}"> <
+                        Previous: {{ menu.previous.1 }} </a>
+                {% endif %}
+                {% if menu.next %}
+                    <a class="next btn btn-outline-primary" href="/{{ menu.next.0 }}" style="float: right"> Next:{{ menu.next.1 }} > </a>
+                {% endif %}
+
+            </nav>
+            <hr>
+        {% if form %}
+            <h2 class="mt-4 mb-4 text-center">Live Example</h2>
+        {% endif %}
+            {% block content %}
+            {% endblock %}
+
+            {#            <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on#}
+            {#                larger screens. When toggled using the button below, the menu will change.</p>#}
+            {#            <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is#}
+            {#                optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which#}
+            {#                will toggle the menu when clicked.</p>#}
+        </div>
+
+    </div>
+
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Bootstrap core JavaScript -->
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+{#DatePicker #}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+
+
+<!-- Menu Toggle Script -->
+<script src="{% static 'slick_reporting/main.js' %}"></script>
+<script src="{% static 'slick_reporting/ra.highchart.js' %}"></script>
+<script src="{% static 'slick_reporting/ra.chartsjs.js' %}"></script>
+
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"
+        integrity="JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk"
+        crossorigin="anonymous"></script>
+
+
+
+{% block js_script %}
+{% endblock %}
+{##}
+{#<script>#}
+{#    $("#menu-toggle").click(function (e) {#}
+{#        e.preventDefault();#}
+{#        $("#wrapper").toggleClass("toggled");#}
+{#    });#}
+{#</script>#}
+
+</body>
+
+</html>
