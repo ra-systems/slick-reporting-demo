@@ -150,6 +150,6 @@ MENU = (
 
     # ('crosstab-charts', _('Form Customization')),
     # ('crosstab-charts', _('ReportFields')),
-    ('wip', _('Debit and Credit calculation')),
+    ('thank-you', _('End Walk through')),
 
 )

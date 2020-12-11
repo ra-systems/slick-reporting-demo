@@ -361,3 +361,7 @@ class LogIns(SlickReportView):
         'title_source': 'date_joined',
         'title': 'Logins Per Day'
     }, ]
+
+
+class ThankYou(TemplateView):
+    template_name = 'slick_example/thank-you.html'

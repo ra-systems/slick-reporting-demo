@@ -7,8 +7,8 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Django Slick Reporting">
+    <meta name="author" content="Ramez Ashraf <https://rasystems.io>">
 
 
     <title>Django Slick Reporting - {{ menu.current.1 }}</title>
@@ -24,7 +24,6 @@
           href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 
 
-
     <style>
         {#pre code {#}
         {#    font-size: 1.3em;#}
@@ -32,18 +31,28 @@
         .triple-quoted-string {
             color: green !important;
         }
+
         .token.operator {
             background: initial !important;
         }
     </style>
 
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-twilight.css"
+          integrity="sha256-Rl83wx+fN2p2ioYpdvpWxuhAbxj+/7IwaZrKQBu/KQE=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    {% block extra_css %}
+    {% endblock %}
 </head>
 
 <body>
 
 <div class="d-flex" id="wrapper">
-
 
 
     <!-- Sidebar -->
@@ -94,48 +103,49 @@
             </div>
         </nav>
 
-        <div class="container-fluid">
-            {% block page_title %}
-                <h3 class="py-3">{{ menu.current.1 }}</h3>
-            {% endblock %}
+        {% block main_content %}
+            <div class="container-fluid">
+                {% block page_title %}
+                    <h3 class="py-3">{{ menu.current.1 }}</h3>
+                {% endblock %}
 
-        {% block code_comment %}
-            {%  if code_comment %}
-                <pre><code class="language-rest">{{ code_comment }}</code></pre>
-            {% endif %}
-        {% endblock %}
-            {% block code %}
-                <pre><code class="language-python">{{ code|safe }}</code>
+                {% block code_comment %}
+                    {% if code_comment %}
+                        <pre><code class="language-rest">{{ code_comment }}</code></pre>
+                    {% endif %}
+                {% endblock %}
+                {% block code %}
+                    <pre><code class="language-python">{{ code|safe }}</code>
                 </pre>
-            {% endblock %}
+                {% endblock %}
 
 
 
-            <nav class="blog-pagination">
-                {% if menu.previous %}
-                    <a class="previous btn btn-outline-primary" href="/{{ menu.previous.0 }}"> <
-                        Previous: {{ menu.previous.1 }} </a>
+                <nav class="blog-pagination">
+                    {% if menu.previous %}
+                        <a class="previous btn btn-outline-primary" href="/{{ menu.previous.0 }}"> <
+                            Previous: {{ menu.previous.1 }} </a>
+                    {% endif %}
+                    {% if menu.next %}
+                        <a class="next btn btn-outline-primary" href="/{{ menu.next.0 }}" style="float: right">
+                            Next:{{ menu.next.1 }} > </a>
+                    {% endif %}
+
+                </nav>
+                <hr>
+                {% if form %}
+                    <h2 class="mt-4 mb-4 text-center">Live Example</h2>
                 {% endif %}
-                {% if menu.next %}
-                    <a class="next btn btn-outline-primary" href="/{{ menu.next.0 }}" style="float: right">
-                        Next:{{ menu.next.1 }} > </a>
-                {% endif %}
+                {% block content %}
+                {% endblock %}
 
-            </nav>
-            <hr>
-            {% if form %}
-                <h2 class="mt-4 mb-4 text-center">Live Example</h2>
-            {% endif %}
-            {% block content %}
-            {% endblock %}
-
-            {#            <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on#}
-            {#                larger screens. When toggled using the button below, the menu will change.</p>#}
-            {#            <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is#}
-            {#                optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which#}
-            {#                will toggle the menu when clicked.</p>#}
-        </div>
-
+                {#            <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on#}
+                {#                larger screens. When toggled using the button below, the menu will change.</p>#}
+                {#            <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is#}
+                {#                optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which#}
+                {#                will toggle the menu when clicked.</p>#}
+            </div>
+        {% endblock main_content %}
     </div>
 
     <!-- /#page-content-wrapper -->
@@ -157,20 +167,6 @@
 <script src="{% static 'slick_reporting/ra.highchart.js' %}"></script>
 <script src="{% static 'slick_reporting/ra.chartsjs.js' %}"></script>
 
-{#<link rel="stylesheet"#}
-{#      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">#}
-
-
-{#<link rel="stylesheet" type="text/css" href="https://highlightjs.org/static/demo/styles/a11y-dark.css"/>#}
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css"/>
-
-{#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-dark.css">#}
-{#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-tomorrow.css" integrity="sha256-0dkohC9ZEupqWbq0hS5cVR4QQXJ+mp6N2oJyuks6gt0=" crossorigin="anonymous">#}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-twilight.css" integrity="sha256-Rl83wx+fN2p2ioYpdvpWxuhAbxj+/7IwaZrKQBu/KQE=" crossorigin="anonymous">
-{#<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>#}
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/prism.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
-{#<script>hljs.initHighlightingOnLoad();</script>#}
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"

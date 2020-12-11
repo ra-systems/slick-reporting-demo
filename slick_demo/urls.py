@@ -38,4 +38,6 @@ urlpatterns = [
                   path('crosstab/', views.CrossTabReportView.as_view()),
                   path('crosstab-charts/', views.CrosstabCustomization.as_view()),
 
+                  path('thank-you', views.ThankYou.as_view()),
+
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
