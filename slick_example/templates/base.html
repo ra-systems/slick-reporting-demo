@@ -7,8 +7,8 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Django Slick Reporting">
+    <meta name="author" content="Ramez Ashraf <https://rasystems.io>">
 
 
     <title>Django Slick Reporting - {{ menu.current.1 }}</title>
@@ -24,7 +24,6 @@
           href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 
 
-
     <style>
         {#pre code {#}
         {#    font-size: 1.3em;#}
@@ -32,18 +31,22 @@
         .triple-quoted-string {
             color: green !important;
         }
+
         .token.operator {
             background: initial !important;
         }
     </style>
 
+    <!-- Place this tag in your head or just before your close body tag. -->
+
+{#    <script async defer src="https://buttons.github.io/buttons.js"></script>#}
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
 </head>
 
 <body>
 
 <div class="d-flex" id="wrapper">
-
 
 
     <!-- Sidebar -->
@@ -78,6 +81,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="https://github.com/ra-systems/django-slick-reporting">Github</a>
                     </li>
+
                     {#                    <li class="nav-item dropdown">#}
                     {#                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"#}
                     {#                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
@@ -99,11 +103,11 @@
                 <h3 class="py-3">{{ menu.current.1 }}</h3>
             {% endblock %}
 
-        {% block code_comment %}
-            {%  if code_comment %}
-                <pre><code class="language-rest">{{ code_comment }}</code></pre>
-            {% endif %}
-        {% endblock %}
+            {% block code_comment %}
+                {% if code_comment %}
+                    <pre><code class="language-rest">{{ code_comment }}</code></pre>
+                {% endif %}
+            {% endblock %}
             {% block code %}
                 <pre><code class="language-python">{{ code|safe }}</code>
                 </pre>
@@ -157,25 +161,20 @@
 <script src="{% static 'slick_reporting/ra.highchart.js' %}"></script>
 <script src="{% static 'slick_reporting/ra.chartsjs.js' %}"></script>
 
-{#<link rel="stylesheet"#}
-{#      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">#}
-
-
-{#<link rel="stylesheet" type="text/css" href="https://highlightjs.org/static/demo/styles/a11y-dark.css"/>#}
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css"/>
-
-{#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-dark.css">#}
-{#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-tomorrow.css" integrity="sha256-0dkohC9ZEupqWbq0hS5cVR4QQXJ+mp6N2oJyuks6gt0=" crossorigin="anonymous">#}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-twilight.css" integrity="sha256-Rl83wx+fN2p2ioYpdvpWxuhAbxj+/7IwaZrKQBu/KQE=" crossorigin="anonymous">
-{#<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>#}
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/prism.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
-{#<script>hljs.initHighlightingOnLoad();</script>#}
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"
         integrity="JnbsSLBmv2/R0fUmF2XYIcAEMPHEAO51Gitn9IjL4l89uFTIgtLF1+jqIqqd9FSk"
         crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism-twilight.css"
+          integrity="sha256-Rl83wx+fN2p2ioYpdvpWxuhAbxj+/7IwaZrKQBu/KQE=" crossorigin="anonymous"
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/prism.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
 
 
 
