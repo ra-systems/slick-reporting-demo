@@ -130,7 +130,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 from django.utils.translation import ugettext_lazy as _
 
 MENU = (
-    ('', _('Start')),
+    ('', _('Welcome')),
+    ('setup', _('Report Model')),
     ('no-group-by', _('Simple Filter')),
     ('no-group-by-plus-charts', _('Simple Filter tidying up')),
 

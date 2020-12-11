@@ -24,6 +24,7 @@ urlpatterns = [
 
                   path('', views.Index.as_view()),
                   path('raw/', views.GroupByViewWith2ChartsRaw.as_view()),
+                  path('setup/', views.SetupView.as_view(), name='report-model'),
                   path('no-group-by/', views.SimpleListReport.as_view(), name='simple-filer'),
                   path('no-group-by-plus-charts/', views.NoGroupByPlusChart.as_view()),
 

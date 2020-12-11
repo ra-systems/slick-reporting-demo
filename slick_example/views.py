@@ -1,10 +1,12 @@
+import re
+
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.template.defaultfilters import date
 from django.views.generic import TemplateView
 from slick_reporting.views import SlickReportViewBase, SlickReportView as OriginalReportView
 from slick_reporting.fields import SlickReportField
-from .models import SalesLineTransaction
+from .models import SalesLineTransaction, Client, Product
 from django.utils.translation import ugettext_lazy as _
 import inspect
 
@@ -56,6 +58,23 @@ class Index(TemplateView):
     template_name = 'slick_example/index.html'
 
 
+class SetupView(TemplateView):
+    """
+    We start by a model that contains the data we want to analyze.
+
+    Consider this example SalesLog model
+    """
+    template_name = 'slick_reporting/simple_report.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['code'] = inspect.getsource(SalesLineTransaction) + '\n\n' + inspect.getsource(
+            Client) + '\n\n' + inspect.getsource(Product)
+        context['code_comment'] = self.__class__.__doc__
+        context['form'] = None
+        return context
+
+
 class SlickReportView(SlickReportViewBase):
     # template_name = 'slick_example/simple_report.html'
     code = ''
@@ -65,41 +84,49 @@ class SlickReportView(SlickReportViewBase):
         context = super().get_context_data(**kwargs)
         # context['code'] = inspect.getsource(self.__class__)
         # context['code'] = highlight(inspect.getsource(self.__class__), PythonLexer(), HtmlFormatter(style='colorful'))
-        context['code'] = inspect.getsource(self.__class__)
+        code = inspect.getsource(self.__class__)
+        # nodoc = re.sub(":\s'''.*?'''", "", code)
+        # nodoc = re.sub(':\s""".*?"""', "", nodoc, )
+        points = [(x.start(), x.end()) for x in re.finditer('\"\"\"', code)]
+        code = code.replace(code[points[0][0]:points[1][1]], '')
+
+        # import pdb; pdb.set_trace()
+        context['code'] = self.code or code
+        context['code_comment'] = self.comment or self.__doc__
+
         # context['comment'] = publish_parts(self.comment, writer_name='html')['html_body']
         # context['comment'] = publish_parts(self.__class__.__doc__ or '', writer_name='html')['html_body']
-
-        code = 'print "Hello World"'
-        # print()
 
         return context
 
 
 class SimpleListReport(SlickReportView):
     """
-    Let's start by simply creating a page where we can filter our report_model record / dataset.
-    In this example we inherit from The class `SlickReportView` (which is CBV in essence).
+    Let's start by creating a page where we can filter our report_model record / dataset.
+    Slick Reporting come with `SlickReportView` CBV.
 
-    Mandatory configuration for a ``SlickReportView`` are:
-    `report_model` is the django model that contains the data we're interested in computing over.
-    `date_field` a Date/DateTime field on the report model to be used for filtering and computing.
-    `columns`:   a list of 1. fields on the report model or 2.SlickReportField names or classes.
-
+    By adding this view to your urls.py
+        path('', views.SimpleListReport.as_view()),
+    You'll see a results page as the shown below
     """
-
     report_model = SalesLineTransaction
-    date_field = 'transaction_date'
+    # the model containing the data we want to analyze
 
+    date_field = 'transaction_date'
+    # a date/datetime field on the report model
+
+    # fields on the report model ... surprise !
     columns = ['transaction_date', 'client', 'product', 'quantity', 'price', 'value']
+
 
 
 class NoGroupByPlusChart(SlickReportView):
     """
-    Let's explore more capabilities to the SlickReportView.
-
-    Instead of showing the Client and Product id, like previous example, we will show their names and enhance how the date is displayed
+    More options:
+    ``columns`` support model traversing
+    And
+    ``format_row`` hook called on each row to do tidy up the results
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
     columns = ['transaction_date', 'client__name', 'product__name', 'quantity', 'price', 'value']
@@ -110,40 +137,33 @@ class NoGroupByPlusChart(SlickReportView):
         :param row_obj: a dict representing a single row in the results
         :return: A dict representing a single row in the results
         """
-
         row_obj['transaction_date'] = date(row_obj['transaction_date'], 'd-m-y H:i')
+
         return row_obj
 
 
 class GroupByIntro(SlickReportView):
     """
-    We start doing more interesting stuff by aggregating and computing values for groups of data in our report model.
+    Let's start aggregating and computing values for groups of data in our report model.
 
-    Here we group by the `product` ForeignKey and compute the sum of the `value` field in
-    our report_model `SalesLineTransaction`.. giving us the sale worth for each product.
+    This an example of "Total Sales Of Each Product"
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
+
     group_by = 'product'
+    # We can group_by a foreign key or date field
+
     columns = ['name',
-               SlickReportField.create(Sum, 'value', name='value__sum', verbose_name=_('Total sold $')),
+               SlickReportField.create(method=Sum, field='value', name='value__sum', verbose_name=_('Total sold $'))
+               # a Slick Report Field is responsible for carrying on the needed calculation(s).
                ]
 
 
 class GroupByView(SlickReportView):
     """
     It's easy to add chart(s) to the view, using `chart_settings` which is a list of object, each object represent a chart
-
-    Chart Object
-    * type: what kind of chart it is bar, pie, line, column
-    * data_source: a list of Field name(s) of containing the numbers we want to chart,
-    * title_source: a list label(s) respective to the `data_source`.
-
-    * title: (optional) The chart title
-    * id: (optional) Name used to refer to this exact chart in front end default is `type-{index}`
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
     group_by = 'product'
@@ -153,18 +173,16 @@ class GroupByView(SlickReportView):
 
     chart_settings = [{
         'type': 'pie',
-        'data_source': ['quantity__sum'],
-        'title_source': ['name'],
+        'data_source': ['quantity__sum'],  # the name of the field containing the data values
+        'title_source': ['name'],  # name of the field containing the data labels
+        'title': 'Pie Chart (Quantities) Highcharts',  # to be displayed on the chart
     }]
 
 
 class GroupByViewWith2Charts(SlickReportView):
     """
-    We can have multiple charts, multiple Calculation fields and multiple charting engines !!
-    Slick Reporting by default comes with 2 charting engine support `Highcharts` and `ChartsJs`
-    You can set the engine_name per chart, if not set it defaults to ``SLICK_REPORTING_DEFAULT_CHARTS_ENGINE``
+    We can have multiple Calculation fields, multiple charts and multiple charting engines !!
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
     group_by = 'product'
@@ -175,7 +193,7 @@ class GroupByViewWith2Charts(SlickReportView):
 
     chart_settings = [
         {'type': 'pie',
-         'engine_name': 'highcharts', # setting the engine per chart
+         'engine_name': 'highcharts',  # setting the engine per chart
          'data_source': ['quantity__sum'],
          'title_source': ['name'],
          'title': 'Pie Chart (Quantities) Highcharts'
@@ -186,8 +204,7 @@ class GroupByViewWith2Charts(SlickReportView):
          'title_source': ['name'],
          'title': 'Pie Chart (Quantities) ChartsJs'
          },
-
-        # no engine_name set, fall back to the default set in SLICK_REPORTING_DEFAULT_CHARTS_ENGINE
+        # Default: fall back to the what's set in SLICK_REPORTING_DEFAULT_CHARTS_ENGINE
         {'type': 'bar',
          'data_source': ['value__sum'],
          'title_source': ['name'],
@@ -201,39 +218,36 @@ class TimeSeries(SlickReportView):
     A time series is a series of data points indexed in time order. Most commonly, a time series is a sequence taken at
     successive equally spaced points in time. - from Wikipedia
 
-
-    `time_series_pattern` Possible options are: daily, weekly, semimonthly, monthly, quarterly, semiannually, annually and custom.
-    `time_series_columns` A list of SlickReportField classes (or names registered) , which will  be computed for each series.
-
     In this example we can see how many pieces of each product were sold each month.
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
     group_by = 'product'
     columns = ['name']
 
-    # To activate a time series we need to set
     time_series_pattern = 'monthly'
+    # Possible options are: daily, weekly, semimonthly, monthly, quarterly, semiannually, annually and custom.
+
     time_series_columns = [
-        SlickReportField.create(Sum, 'quantity', name='quantity__sum', verbose_name=_('Quantities Sold'))
+        SlickReportField.create(method=Sum, field='quantity', name='quantity__sum', verbose_name=_('Quantities Sold'))
+        # we can have multiple ReportField in the time series columns too !
     ]
 
 
 class TimeSeriesCustomization(SlickReportView):
     """
     Let's explore more options by SlickReportView.
-
-    1.  the `'__time_series__' special column name used to control the placing of the time series columns inside your columns.
-        Default behavior is to add he time series columns at the end of the columns
-    2. Plot charts, note that here we can use `plot_total` to plot the total of the time series instead of the details
+    ``__time_series__`` special column name
+    And
+    ``plot_total`` chart setting
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
     group_by = 'product'
     columns = ['name',
                '__time_series__',
+               # __time_series__ is special column name used to control the placing of the time series columns inside your columns.
+               # Default would be appended to the end of the columns.
                SlickReportField.create(Sum, 'value', name='value__sum', verbose_name=_('Grand Sum')),
                ]
 
@@ -246,14 +260,14 @@ class TimeSeriesCustomization(SlickReportView):
         {'type': 'bar',
          'data_source': ['value__sum'],
          'title_source': ['name'],
-         'title': 'Quantities per product per month'
+         'title': 'Total quantities per month',
+         'plot_total': True  # Plot Totals !
          },
         {'type': 'bar',
          'data_source': ['value__sum'],
          'title_source': ['name'],
-         'title': 'Total quantities per month',
-         'plot_total': True  # plot total instead of the details
-         },
+         'title': 'Quantities per product per month'
+         }
     ]
 
 
@@ -262,44 +276,54 @@ class CrossTabReportView(SlickReportView):
     Crosstab reports, also known as matrix reports, to show the relationships between three or more query items.
     Crosstab reports show data in rows and columns with information summarized at the intersection points.
 
-    To get a better idea on what this report does please choose a client -or more- and check the results.
+    *To get a clearer idea on what this report does, please choose Client(s) and check the results.*
     """
-
     report_model = SalesLineTransaction
     date_field = 'transaction_date'
-
     group_by = 'product'
     columns = ['slug', 'name']
 
     # To activate Crosstab
     crosstab_model = 'client'
-    crosstab_columns = [SlickReportField.create(Sum, 'value', name='value__sum', verbose_name=_('Sales'))]
+    # we corsstab on a foreignkey field
+
+    crosstab_columns = [SlickReportField.create(Sum, 'value', name='value__sum', verbose_name=_('Sales'))
+                        # To be computed for each chosen entity in the crosstab.
+                        ]
 
 
 class CrosstabCustomization(SlickReportView):
     """
     Let's add some charts and customizations
-    Like time series, the special column name `__crosstab__` is used to place the crosstab columns inside your columns.
-    In this example you can see the crosstab columns are in the left most of the columns. 
+    ``__crosstab__`` special column name
+    and
+    ``crosstab_compute_reminder`` controlling if compute reminder is an option or no.
+    and
+    ``plot_total`` chart setting works on Crosstab too.
 
-    `crosstab_compute_reminder` is responsible for adding that last column in the crosstab called `Reminder` to compute
-    on all entities except those which were chosen.
-    
-    chart_settings.plot_total also works here.
-
+    *please choose Client(s) and check the results.*
     """
     report_model = SalesLineTransaction
     report_title = _('Product Client sales Cross-tab')
     date_field = 'transaction_date'
 
     group_by = 'product'
-    columns = ['__crosstab__', 'slug', 'name']
+    columns = ['__crosstab__',  # a special column name to control the placing fot eh crosstab columns inside th results
+               'slug', 'name']
 
     crosstab_model = 'client'
     crosstab_columns = [SlickReportField.create(Sum, 'value', name='value__sum', verbose_name=_('Sales'))]
-    crosstab_compute_reminder = True
+    crosstab_compute_reminder = True  # if False the "Reminder" Column will not be computed
 
     chart_settings = [
+        {
+            'type': 'pie',
+            'data_source': ['value__sum'],
+            'plot_total': True,  # Plot total works here too
+            'title_source': ['name'],
+            'title': _('Per Client Total %'),
+
+        },
         {
             'type': 'bar',
             'data_source': ['value__sum'],
@@ -316,14 +340,7 @@ class CrosstabCustomization(SlickReportView):
             'title': _('Per Client Total'),
 
         },
-        {
-            'type': 'pie',
-            'data_source': ['value__sum'],
-            'plot_total': True,
-            'title_source': ['name'],
-            'title': _('Per Client Total %'),
 
-        }
     ]
 
 

@@ -1,6 +1,7 @@
 {% load static slick_example_tags %}
 <!DOCTYPE html>
 <html lang="en">
+{% get_current_menu as menu %}
 
 <head>
 
@@ -9,7 +10,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Django Slick Reporting</title>
+
+    <title>Django Slick Reporting - {{ menu.current.1 }}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -42,7 +44,7 @@
 
 <div class="d-flex" id="wrapper">
 
-    {% get_current_menu as menu %}
+
 
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
@@ -94,8 +96,14 @@
 
         <div class="container-fluid">
             {% block page_title %}
-                <h4>{{ menu.current.1 }}</h4>
+                <h3 class="py-3">{{ menu.current.1 }}</h3>
             {% endblock %}
+
+        {% block code_comment %}
+            {%  if code_comment %}
+                <pre><code class="language-rest">{{ code_comment }}</code></pre>
+            {% endif %}
+        {% endblock %}
             {% block code %}
                 <pre><code class="language-python">{{ code|safe }}</code>
                 </pre>
