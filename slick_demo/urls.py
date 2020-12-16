@@ -26,7 +26,8 @@ urlpatterns = [
                   path('raw/', views.GroupByViewWith2ChartsRaw.as_view()),
                   path('setup/', views.SetupView.as_view(), name='report-model'),
                   path('no-group-by/', views.SimpleListReport.as_view(), name='simple-filer'),
-                  path('no-group-by-plus-charts/', views.NoGroupByPlusChart.as_view()),
+                  path('no-group-by-plus-charts/', views.TimeSeriesWithoutGroupBy.as_view()),
+                  path('time-series-without-group-by/', views.NoGroupByTimeSeries.as_view()),
 
                   path('group-by/', views.GroupByIntro.as_view()),
                   path('group-by-chart/', views.GroupByView.as_view()),

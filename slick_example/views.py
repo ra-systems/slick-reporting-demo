@@ -119,8 +119,7 @@ class SimpleListReport(SlickReportView):
     columns = ['transaction_date', 'client', 'product', 'quantity', 'price', 'value']
 
 
-
-class NoGroupByPlusChart(SlickReportView):
+class TimeSeriesWithoutGroupBy(SlickReportView):
     """
     More options:
     ``columns`` support model traversing
@@ -267,6 +266,34 @@ class TimeSeriesCustomization(SlickReportView):
          'data_source': ['value__sum'],
          'title_source': ['name'],
          'title': 'Quantities per product per month'
+         }
+    ]
+
+
+class NoGroupByTimeSeries(SlickReportView):
+    """
+    In this example we are telling Slick Reporting to create a monthly time series for the sum of the `value` field.
+    However without giving a group_by, so it operate on the all the records
+    and gives us a one line sum of all `values` row in the report model.
+
+    """
+    report_model = SalesLineTransaction
+    date_field = 'transaction_date'
+    columns = ['__time_series__',
+               SlickReportField.create(Sum, 'value', verbose_name='Grand Total')
+               ]
+
+    time_series_pattern = 'monthly'
+    time_series_columns = [
+        SlickReportField.create(method=Sum, field='value', name='value__sum', verbose_name=_('Quantities Sold'))
+    ]
+
+    # A chart for our total values
+    chart_settings = [
+        {'type': 'bar',
+         'data_source': ['value__sum'],
+         'title_source': ['name'],
+         'title': 'Total sales per month'
          }
     ]
 

@@ -142,6 +142,7 @@ MENU = (
 
     ('time-series', _('Time Series')),
     ('time-series-charts', _('Time Series Customization')),
+    ('time-series-without-group-by', _('Time series intro')),
     ('crosstab', _('Crosstab')),
     ('crosstab-charts', _('Crosstab Customization')),
 
