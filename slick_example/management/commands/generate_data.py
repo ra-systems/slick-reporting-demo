@@ -68,11 +68,12 @@ class Command(BaseCommand):
                 chosen_client = random.choice(client_ids)
                 SalesLineTransaction.objects.create(
                     transaction_date=day,
-                    sales_transaction=SalesTransaction.objects.create(transaction_date=day, client_id=chosen_client),
+                    # sales_transaction=SalesTransaction.objects.create(transaction_date=day, client_id=chosen_client),
                     product_id=random.choice(product_ids),
                     client_id=chosen_client,
                     quantity=random.randrange(1, 10),
-                    price=random.randrange(1, 10)
+                    price=random.randrange(1, 10),
+                    # doc_type = 'sales'
                 )
 
             for z in range(1, etransaction_per_day):

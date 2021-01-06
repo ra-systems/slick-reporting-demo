@@ -23,6 +23,7 @@ class Client(models.Model):
     slug = models.SlugField(_('Code'), max_length=50, unique=True, db_index=True, blank=True)
     name = models.CharField(_('Name'), max_length=255, unique=True, db_index=True)
 
+
     class Meta:
         verbose_name = _('Client')
         verbose_name_plural = _('Clients')

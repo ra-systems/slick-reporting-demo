@@ -285,7 +285,7 @@ class NoGroupByTimeSeries(SlickReportView):
 
     time_series_pattern = 'monthly'
     time_series_columns = [
-        SlickReportField.create(method=Sum, field='value', name='value__sum', verbose_name=_('Quantities Sold'))
+        SlickReportField.create(method=Sum, field='value', name='value__sum', verbose_name=_('Sales'))
     ]
 
     # A chart for our total values
@@ -293,7 +293,8 @@ class NoGroupByTimeSeries(SlickReportView):
         {'type': 'bar',
          'data_source': ['value__sum'],
          'title_source': ['name'],
-         'title': 'Total sales per month'
+         'title': 'Total sales per month',
+         'plot_total':True,
          }
     ]
 
