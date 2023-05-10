@@ -73,7 +73,7 @@ class Command(BaseCommand):
                     client_id=chosen_client,
                     quantity=random.randrange(1, 10),
                     price=random.randrange(1, 10),
-                    # doc_type = 'sales'
+                    doc_type='sales'
                 )
 
             for z in range(1, etransaction_per_day):

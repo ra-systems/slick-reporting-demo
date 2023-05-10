@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from slick_reporting.views import SlickReportViewBase, SlickReportView as OriginalReportView
 from slick_reporting.fields import SlickReportField
 from .models import SalesLineTransaction, Client, Product
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 import inspect
 
 User = get_user_model()

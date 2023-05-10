@@ -2,9 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-# from ra.base.models import EntityModel, TransactionModel, TransactionItemModel, QuantitativeTransactionItemModel
-# from ra.base.registry import register_doc_type
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class Product(models.Model):
