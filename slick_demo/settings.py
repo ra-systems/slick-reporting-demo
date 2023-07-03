@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'slick_example.apps.SlickExampleConfig',
     'slick_reporting',
     'crispy_forms',
+"crispy_bootstrap4",
+
     # 'slick_example',
 ]
 
@@ -155,3 +157,5 @@ MENU = (
     ('thank-you', _('End Walk through')),
 
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
